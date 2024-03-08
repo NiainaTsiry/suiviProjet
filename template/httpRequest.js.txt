@@ -1,0 +1,119 @@
+
+/////////////// DEBUT ALIGNEMENT -- PARTENAIRE/////////////
+function getHtmlAlgnement(code , update){
+    let divM = document.createElement("div");
+    divM.className="row";
+    let div = document.createElement("div");
+    div.className = "col-md-12";
+    let label = document.createElement("label");
+    label.className = "form-label";
+    label.textContent = "Entrer le Nom du partenaire";
+    label.style = "font-weight: bold;";
+    let input = document.createElement("input");
+    input.type="text";
+    input.required = true;
+    input.id = "nom_parte";
+    input.className = "form-control";
+    div.appendChild(label);
+    div.appendChild(input);
+    let div1 = document.createElement("div");
+    div1.className = "col-md-12";
+    div1.style="padding:10px;";
+    let button = document.createElement("button");
+    button.className = "btn btn-warning";
+    button.textContent = "aligner";
+    button.id = "btn-aligner";
+    button.onclick = function() {
+        update(code);
+    }
+    div1.appendChild(button);
+    divM.appendChild(div);
+    divM.appendChild(div1);
+    return divM;
+}
+function alignementPartenaire(lien,code,patenaire,actualisation){
+    let value = { code:code,partenaire:patenaire};
+   // alert(JSON.stringify(value));
+    fetch(lien + "index.php/suiviProjet.php/alignement", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(value)
+    }).then(res => res.text()) 
+    .then(data => {
+        if(patenaire == ''){
+            alert("entrer le nom du partenaire");
+        }else{
+            actualisation();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error); 
+    });
+}
+
+
+///////////////FIN ALIGNEMENT -- PARTENAIRE/////////////
+
+function listeProjet(lien, secteur,type, debut, fin,region,district,num,content,afficheModal) {
+    let value = { secteurs: secteur ,type:type,debut:debut,fin:fin,district:district,region:region,num:num};
+    fetch(lien + "index.php/suiviProjet.php/liste_projet/modal", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(value)
+    }).then(res => res.text()) 
+    .then(data => {
+        content.innerHTML = data;
+        afficheModal();
+    })
+    .catch(error => {
+        console.error('Error:', error); 
+    });
+
+}
+
+
+function getData(lien, secteur,type, debut, fin, addDataRegionToMaps, icon,updateValeurTotal,updateNombreParSecteur) {
+    let value = { secteurs: secteur ,type:type,debut:debut,fin:fin};
+   // alert(JSON.stringify(value));
+    fetch(lien + "index.php/suiviProjet.php/jsonNombreProjet", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(value)
+    }).then(res => res.json()) 
+        .then(data => {
+            let value = JSON.parse(JSON.stringify(data));
+            //alert(value.total);
+            updateValeurTotal(value.total);
+            updateNombreParSecteur(value.secteurs);
+            addDataRegionToMaps(value.data, icon); 
+        })
+        .catch(error => {
+            console.error('Error:', error); 
+        });
+}
+
+function getDataDistrict(lien, secteur,type, debut, fin, addDataDistrictToMaps, icon,updateValeurTotal,updateNombreParSecteur) {
+    let value = { secteurs: secteur ,type:type,debut:debut,fin:fin};
+    fetch(lien + "index.php/suiviProjet.php/jsonNombreProjet/district", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(value)
+    }).then(res => res.json()) 
+        .then(data => {
+            let value = JSON.parse(JSON.stringify(data));
+            updateValeurTotal(value.total);
+            updateNombreParSecteur(value.secteurs);
+            addDataDistrictToMaps(value.data, icon); 
+        })
+        .catch(error => {
+            console.error('Error:', error); 
+        });
+}
