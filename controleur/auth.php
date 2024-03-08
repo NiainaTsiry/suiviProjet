@@ -13,17 +13,21 @@ function register()
 		mail($to,$subject,$txt,$headers);*/
 }
 
+function loginForm(){
+	require 'view/v2/login.php';
+}
+
 function login()
   {   
-         if (authentication($_POST['username'],$_POST['pass'])){
-         	$vret='succes';
+	    $error = '';
+         if (authentication($_POST['username'],$_POST['password'])){
          	$_SESSION['isConnected']=true;
          	$_SESSION["connectUser"] = $_POST['username'];
+			statistiqueParSecteur();
          }else{
-         	$vret='error'; 
+         	$error = 'Invalid username or password';
+			require 'view/v2/login.php'; 
          }
-         
-		echo $vret;
   }
   function logout()
   {   

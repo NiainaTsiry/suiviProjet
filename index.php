@@ -18,8 +18,13 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 if ('/suiviProjet/index.php' == $uri) {
   accueil();
-} elseif ('/suiviProjet/' == $uri) {
-  accueil();
+}
+elseif ('/suiviProjet/index.php/login.php/auth' == $uri) {
+
+  login();
+}
+elseif ('/suiviProjet/' == $uri) {
+  loginForm();
 } elseif ('/suiviProjet/index.php/activite.php/accueil' == $uri) {
   accueil();
 } elseif ('/suiviProjet/index.php/gestionProjet.php/creationProjet' == $uri) {
